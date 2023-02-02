@@ -18,15 +18,23 @@
     <b>Книги: </b>
     <br/>
     <table th:each="book : ${books}">
+        <caption>List of books</caption>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Year</th>
+        </tr>
+        </thead>
+        <tbody>
         <tr th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}">book</tr>
+        </tbody>
     </table>
     <hr/>
 </div>
 
 <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
     <input type="submit" value="Удалить"/>
-</form>
-
 </form>
 </body>
 </html>

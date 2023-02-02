@@ -18,6 +18,8 @@ public class PeopleController {
     private final PersonDAO personDAO;
     private final PersonValidator personValidator;
 
+    private static final String REDIRECTTOPEOPLE = "redirect:/people";
+
     @Autowired
     public PeopleController(PersonDAO personDAO, PersonValidator personValidator) {
         this.personDAO = personDAO;
@@ -46,7 +48,7 @@ public class PeopleController {
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors()) return "people/new";
         personDAO.save(person);
-        return "redirect:/people";
+        return REDIRECTTOPEOPLE;
     }
 
     @GetMapping("/{id}/edit")
@@ -62,12 +64,12 @@ public class PeopleController {
         if (bindingResult.hasErrors())
             return "people/edit";
         personDAO.update(id, person);
-        return "redirect:/people";
+        return REDIRECTTOPEOPLE;
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
         personDAO.delete(id);
-        return "redirect:/people";
+        return REDIRECTTOPEOPLE;
     }
 }

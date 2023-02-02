@@ -19,6 +19,8 @@ public class BooksController {
     private final BookDAO bookDAO;
     private final PersonDAO personDAO;
 
+    private static final String REDIRECTTOBOOKS = "redirect:/books";
+
     @Autowired
     public BooksController(BookDAO bookDAO, PersonDAO personDAO) {
         this.bookDAO = bookDAO;
@@ -48,7 +50,7 @@ public class BooksController {
     public String create(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return "books/new";
         bookDAO.save(book);
-        return "redirect:/books";
+        return REDIRECTTOBOOKS;
     }
 
     @GetMapping("/{id}/edit")
@@ -62,24 +64,24 @@ public class BooksController {
                          @PathVariable("id") int id) {
         if (bindingResult.hasErrors()) return "books/edit";
         bookDAO.update(id, book);
-        return "redirect:/books";
+        return REDIRECTTOBOOKS;
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
         bookDAO.delete(id);
-        return "redirect:/books";
+        return REDIRECTTOBOOKS;
     }
 
     @PatchMapping("/{id}/release")
     public String release(@PathVariable("id") int id) {
         bookDAO.release(id);
-        return "redirect:/books/" + id;
+        return REDIRECTTOBOOKS + id;
     }
 
     @PatchMapping("/{id}/assign")
     public String assign(@PathVariable("id") int id, @ModelAttribute("person") Person selectedPerson) {
         bookDAO.assign(id, selectedPerson);
-        return "redirect:/books/" + id;
+        return REDIRECTTOBOOKS + id;
     }
 }
