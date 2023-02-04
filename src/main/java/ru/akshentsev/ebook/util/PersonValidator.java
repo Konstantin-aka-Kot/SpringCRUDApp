@@ -26,7 +26,7 @@ public class PersonValidator implements Validator {
     public void validate(Object o, Errors errors) {
         Person person = (Person) o;
         // Посмотреть есть ли человек с таким же email в БД
-        if (!peopleService.findByFullName(person.getFullName()).isEmpty())
-            errors.rejectValue("fullName", "", "Человек к таким именем уже существует");
+        if (peopleService.getPersonByFullName(person.getFullName()).isPresent())
+            errors.rejectValue("fullName", "", "Человек к таким ФИО уже существует");
     }
 }

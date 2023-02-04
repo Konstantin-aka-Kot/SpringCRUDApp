@@ -9,22 +9,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.akshentsev.ebook.dao.BookDAO;
-import ru.akshentsev.ebook.dao.PersonDAO;
 import ru.akshentsev.ebook.models.Book;
 import ru.akshentsev.ebook.models.Person;
 import ru.akshentsev.ebook.services.BooksService;
 import ru.akshentsev.ebook.services.PeopleService;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
 public class BooksController {
-    private final BookDAO bookDAO;
-    private final PersonDAO personDAO;
 
     private final BooksService booksService;
 
@@ -32,9 +26,7 @@ public class BooksController {
     private static final String REDIRECTTOBOOKS = "redirect:/books";
 
     @Autowired
-    public BooksController(BookDAO bookDAO, PersonDAO personDAO, BooksService booksService, PeopleService peopleService) {
-        this.bookDAO = bookDAO;
-        this.personDAO = personDAO;
+    public BooksController(BooksService booksService, PeopleService peopleService) {
         this.booksService = booksService;
         this.peopleService = peopleService;
     }
@@ -57,10 +49,10 @@ public class BooksController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
         model.addAttribute("book", booksService.findOne(id));
-        Person bookOwner = peopleService.findOne(id);
+        Person bookOwner = booksService.getBookOwner(id);
 
         if (bookOwner != null) model.addAttribute("owner", bookOwner);
-        else model.addAttribute("people", booksService.findAll());
+        else model.addAttribute("people", peopleService.findAll());
         return "books/show";
     }
 
@@ -97,20 +89,21 @@ public class BooksController {
     @PatchMapping("/{id}/release")
     public String release(@PathVariable("id") int id) {
         booksService.release(id);
-        return REDIRECTTOBOOKS + id;
+        return "redirect:/books/" + id;
     }
 
     @PatchMapping("/{id}/assign")
     public String assign(@PathVariable("id") int id, @ModelAttribute("person") Person selectedPerson) {
         booksService.assign(id, selectedPerson);
-        return REDIRECTTOBOOKS + id;
+        return "redirect:/books/" + id;
     }
 
-    @GetMapping("/search")
-    public String search(Model model, @RequestParam(defaultValue="") String query) {
-        List<Book> books = booksService.searchBooks(query);
-        model.addAttribute("books", books);
+    @PostMapping("/search")
+    public String makeSearch(Model model, @RequestParam("query") String query) {
+        model.addAttribute("books", booksService.searchByTitle(query));
         return "books/search";
     }
 
+    @GetMapping("/search")
+    public String searchPage() {return "books/search";}
 }

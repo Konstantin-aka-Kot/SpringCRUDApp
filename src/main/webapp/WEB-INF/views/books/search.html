@@ -6,15 +6,23 @@
     <title>Поиск книги</title>
 </head>
 <body>
-<h1>Book Search</h1>
-<form action="#" th:action="@{/books/search}" th:object="${books}" method="post">
+
+<h1>Поиск книги: </h1>
+<form th:method="POST" th:action="@{/books/search}">
     <div>
-        <label for="query">Book name:</label>
-        <input type="text" id="query" name="query" th:field="*{query}" />
+        <label for="query">Введите название книги:</label>
+        <input type="text" id="query" name="query" />
     </div>
-    <button type="submit">Search</button>
+    <button type="submit">Искать!</button>
 </form>
-<h2>Search Results</h2>
+
+<div th:if="${books}">
+    <div th:if="${books.isEmpty()}">
+        Книг не найдено
+    </div>
+</div>
+
+<h2>Результаты поиска</h2>
 <table>
     <thead>
     <tr>
@@ -25,9 +33,9 @@
     </thead>
     <tbody>
     <tr th:each="book : ${books}">
-        <td th:text="${book.title}"></td>
-        <td th:text="${book.author}"></td>
-        <td th:text="${book.owner}"></td>
+        <td th:text="${book.getTitle()}"></td>
+        <td th:text="${book.getAuthor()}"></td>
+        <td th:text="${book.getOwner()}"></td>
     </tr>
     </tbody>
 </table>

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Show</title>
 </head>
 <body>
@@ -12,12 +13,12 @@
 
 <!-- th:if is a Thymeleaf expression that conditionally renders the div element if the condition is true -->
 <div th:if="${books.isEmpty()}">
-    <p>Person has not taken any books yet</p>
-    <hr>
+    <p>Человек не взял не одной книги</p>
+    <hr/>
 </div>
 
 <div th:if="${!books.isEmpty()}">
-    <hr>
+    <hr/>
     <table>
         <caption>Книги:</caption>
         <thead>
@@ -29,9 +30,9 @@
         </thead>
         <tbody>
         <tr th:each="book : ${books}">
-            <td th:text="${book.getTitle()}"></td>
-            <td th:text="${book.getAuthor()}"></td>
-            <td th:text="${book.getYear()}"></td>
+            <td th:text="${book.getTitle()}" th:style="${book.isExpired()} ? 'color: red' : 'color: black'">title</td>
+            <td th:text="${book.getAuthor()}" th:style="${book.isExpired()} ? 'color: red' : 'color: black'">author</td>
+            <td th:text="${book.getYear()}" th:style="${book.isExpired()} ? 'color: red' : 'color: black'">year</td>
         </tr>
         </tbody>
     </table>
@@ -40,8 +41,13 @@
 </div>
 
 <!-- th:method and th:action are Thymeleaf expressions that set the method and action attributes of the form element, respectively -->
-<form method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
-    <input type="submit" value="Delete">
+<form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
+    <input type="submit" value="Редактировать">
 </form>
+
+<form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+    <input type="submit" value="Удалить">
+</form>
+
 </body>
 </html>
