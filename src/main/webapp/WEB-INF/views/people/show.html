@@ -1,41 +1,47 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Show</title>
 </head>
 <body>
-<p th:text="${person.getFullName() + ', ' + person.getYearOfBirth()}">VALUE</p>
+<p>
+    <!-- th:text is a Thymeleaf expression that sets the text of the paragraph element -->
+    <span th:text="${person.getFullName() + ', ' + person.getYearOfBirth()}">VALUE</span>
+</p>
 
+<!-- th:if is a Thymeleaf expression that conditionally renders the div element if the condition is true -->
 <div th:if="${books.isEmpty()}">
-    <p>Человек пока не взял не одной книги</p>
-    <hr/>
+    <p>Person has not taken any books yet</p>
+    <hr>
 </div>
 
 <div th:if="${!books.isEmpty()}">
-    <hr/>
-    <b>Книги: </b>
-    <br/>
-    <table th:each="book : ${books}">
-        <caption>List of books</caption>
+    <hr>
+    <table>
+        <caption>Книги:</caption>
         <thead>
         <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Year</th>
+            <th th:text="'Название'"></th>
+            <th th:text="'Автор'"></th>
+            <th th:text="'Год'"></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}">book</tr>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.getTitle()}"></td>
+            <td th:text="${book.getAuthor()}"></td>
+            <td th:text="${book.getYear()}"></td>
+        </tr>
         </tbody>
     </table>
-    <hr/>
+
+    <hr>
 </div>
 
-<form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
-    <input type="submit" value="Удалить"/>
+<!-- th:method and th:action are Thymeleaf expressions that set the method and action attributes of the form element, respectively -->
+<form method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
+    <input type="submit" value="Delete">
 </form>
-
 </body>
 </html>
